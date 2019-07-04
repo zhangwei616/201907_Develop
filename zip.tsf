@@ -1,0 +1,26 @@
+function zip(sourceFilePath,fileList,zipName);
+begin
+  (*
+  sourceFilePath：源文件路径名,如"d:\\ids\\"
+  fileList:文件名的一维数组
+  zipName:压缩后zip包绝对路径,如"d:\\ids\\ids.zip"
+  *)
+  tslPath := extractfilepath(class(TWebFundIDSConfig).getTSLPath());
+  rar := tslPath$'7z.exe';
+echo tslpath;
+  if fileexists('',zipName) then
+    filedelete('',zipName);
+
+  cmdline := ' a '$'"'$zipName$'"';
+  for i := 0 to length(fileList)-1 do
+  begin
+    cmdline += ' "'$sourceFilePath$fileList[i]$'"';
+  end;
+
+  writetolog("log","","压缩文件:"$rar$cmdline);
+  ret:= sysexec(rar,rar$cmdline,tslPath,true,ReturnCode);
+  if ret>0 then
+    return SysCloseHandle(ret)
+  else
+    return false;
+end;
